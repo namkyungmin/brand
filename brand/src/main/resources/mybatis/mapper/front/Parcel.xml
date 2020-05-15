@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.parcel.mapper.FrontParcelMapper">
+    <select id="getParcelIdx" resultType="kr.co.honorsville.parcel.dto.FrontParcel">
+        SELECT  parcel_id as parcelId, 
+		        parcel_name as parcelName,
+		        parcel_type as parcelType,  
+		        parcel_stage as parcelStage, 
+		        parcel_stage_etc as parcelStageEtc, 
+		        parcel_area as parcelArea, 
+		        parcel_list_image as parcelListImage, 
+		        parcel_list_image_mo as parcelListImageMo, 
+		        parcel_detail_image as parcelDetailImage, 
+		        parcel_detail_image_mo as parcelDetailImageMo, 
+		        homepage_url as homepageUrl, 
+		        homepage_target as homepageTarget, 
+		        announce_start_date as announceStartDate, 
+		        announce_end_date as announceEndDate, 
+		        winner_start_date as winnerStartDate, 
+		        winner_end_date as winnerEndDate, 
+		        application_start_date as applicationStartDate, 
+		        application_end_date as applicationEndDate, 
+		        contract_start_date as contractStartDate, 
+		        contract_end_date as contractEndDate, 
+		        display_yn as displayYn,
+		        parcel_type as parcelType, 
+		        location, 
+		        inquiry, 
+		        period, 
+		        scale, 
+		        admission, 
+		        numbers, 
+		        enforcement_company as enforcementCompany, 
+		        constructor_company as constructorCompany,
+		        building_area as buildingArea, 
+		        building_rate as buildingRate, 
+		        total_area as totalArea, 
+		        floor_area as totalArea, 
+		        plottage, 
+		        construction_location as constructionLocation, 
+		        construction_inquiry as constructionInquiry, 
+		        construction_image_pc as constructionImagePc, 
+		        construction_image_mo as constructionImageMo, 
+		        construction_display_yn as constructionDisplayYn, 
+		        modelhouse_location as modelhouseLocation, 
+		        modelhouse_inquiry as modelhouseInquiry, 
+		        modelhouse_image_pc as modelhouseImagePc, 
+		        modelhouse_image_mo as modelhouseImageMo, 
+		        modelhouse_display_yn as modelhouseDisplayYn,
+         	    DATE_FORMAT(reg_time, '%Y.%m.%d %H:%i:%s') as regTime
+         FROM tb_parcel where parcel_id=#{parcelId}
+    </select>          
+    
+    <select id="getParcelListCnt" resultType="int">
+        SELECT count(parcel_id) cnt 
+         FROM tb_parcel
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (parcel_area like '%${searchValue}%' OR parcel_name like '%${searchValue}%' OR parcel_stage like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>     
+         <if test='parcelStage != ""'>
+         	AND	parcel_stage =#{parcelStage}
+         </if>     
+         <if test='parcelType != ""'>
+         	AND	parcel_type in ( ${parcelType} )
+         </if>                  
+         <if test='parcelArea != ""'>
+         	AND	parcel_area in ( ${parcelArea} )
+         </if>         
+    </select>      
+    
+    <select id="getParcelList" resultType="kr.co.honorsville.parcel.dto.FrontParcel">
+        SELECT parcel_id as parcelId, 
+		        parcel_name as parcelName, 
+		        parcel_type as parcelType, 
+		        parcel_stage as parcelStage, 
+		        parcel_stage_etc as parcelStageEtc, 
+		        parcel_area as parcelArea, 
+		        parcel_list_image as parcelListImage, 
+		        parcel_list_image_mo as parcelListImageMo, 
+		        parcel_detail_image as parcelDetailImage, 
+		        parcel_detail_image_mo as parcelDetailImageMo, 
+		        homepage_url as homepageUrl, 
+		        homepage_target as homepageTarget, 
+		        announce_start_date as announceStartDate, 
+		        announce_end_date as announceEndDate, 
+		        winner_start_date as winnerStartDate, 
+		        winner_end_date as winnerEndDate, 
+		        application_start_date as applicationStartDate, 
+		        application_end_date as applicationEndDate, 
+		        contract_start_date as contractStartDate, 
+		        contract_end_date as contractEndDate, 
+		        display_yn as displayYn, 
+		        parcel_type as parcelType,
+		        location, 
+		        inquiry, 
+		        period, 
+		        scale, 
+		        admission, 
+		        numbers, 
+		        enforcement_company as enforcementCompany, 
+		        constructor_company as constructorCompany,
+		        building_area as buildingArea, 
+		        building_rate as buildingRate, 
+		        total_area as totalArea, 
+		        floor_area as totalArea, 
+		        plottage, 
+		        construction_location as constructionLocation, 
+		        construction_inquiry as constructionInquiry, 
+		        construction_image_pc as constructionImagePc, 
+		        construction_image_mo as constructionImageMo, 
+		        construction_display_yn as constructionDisplayYn, 
+		        modelhouse_location as modelhouseLocation, 
+		        modelhouse_inquiry as modelhouseInquiry, 
+		        modelhouse_image_pc as modelhouseImagePc, 
+		        modelhouse_image_mo as modelhouseImageMo, 
+		        modelhouse_display_yn as modelhouseDisplayYn,
+         	    DATE_FORMAT(reg_time, '%Y.%m.%d %H:%i:%s') as regTime,
+         	    (select parcel_id from tb_parcel_interest where user_idx=#{userIdx} and parcel_id =tb_parcel.parcel_id) favorite
+         FROM tb_parcel
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (parcel_area like '%${searchValue}%' OR parcel_name like '%${searchValue}%' OR parcel_stage like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>
+         <if test='parcelStage != ""'>
+         	AND	parcel_stage =#{parcelStage}
+         </if>         
+         <if test='parcelArea != ""'>
+         	AND	parcel_area in ( ${parcelArea} )
+         </if>         
+         <if test='parcelType != ""'>
+         	AND	parcel_type in ( ${parcelType} )
+         </if>         
+		 ORDER BY parcel_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>
+    
+     <select id="getParcelInterest" resultType="kr.co.honorsville.parcel.dto.FrontParcel">
+        SELECT  user_idx userIdx,
+                parcel_id parcelId 
+         FROM tb_parcel_interest 
+         where user_idx=#{userIdx} and parcel_id=#{parcelId}
+    </select>  
+    
+     <insert id="insertParcelInterest" parameterType="kr.co.honorsville.parcel.dto.FrontParcel">
+     	INSERT INTO tb_parcel_interest set     user_idx=#{userIdx}, 
+							        parcel_id=#{parcelId}
+		<selectKey keyProperty="userIdx" resultType="java.lang.Long" >
+        	SELECT LAST_INSERT_ID() as userIdx
+    	</selectKey>
+     </insert> 
+     
+     <update id="deleteParcelInterest" parameterType="kr.co.honorsville.parcel.dto.FrontParcel">
+     	DELETE FROM tb_parcel_interest
+     	              where user_idx=#{userIdx} AND
+							        parcel_id=#{parcelId}
+     </update> 
+     
+    <select id="getParcelInterestListCnt" resultType="int">
+        SELECT count(a.parcel_id) cnt 
+         FROM tb_parcel a  
+   INNER JOIN tb_parcel_interest b
+           on a.parcel_id = b.parcel_id
+         WHERE 1=1  
+           AND user_idx=#{userIdx} 
+         
+    </select>        
+     
+    <select id="getParcelInterestList" resultType="kr.co.honorsville.parcel.dto.FrontParcel">
+        SELECT  a.parcel_id as parcelId, 
+		        a.parcel_name as parcelName, 
+		        a.parcel_stage as parcelStage, 
+		        a.parcel_stage_etc as parcelStageEtc, 
+		        a.parcel_area as parcelArea, 
+		        a.parcel_list_image as parcelListImage, 
+		        a.parcel_list_image_mo as parcelListImageMo, 
+		        a.parcel_detail_image as parcelDetailImage, 
+		        a.parcel_detail_image_mo as parcelDetailImageMo, 
+		        a.homepage_url as homepageUrl, 
+		        a.parcel_type as parcelType, 
+		        a.homepage_target as homepageTarget, 
+		        a.announce_start_date as announceStartDate, 
+		        a.announce_end_date as announceEndDate, 
+		        a.winner_start_date as winnerStartDate, 
+		        a.winner_end_date as winnerEndDate, 
+		        a.application_start_date as applicationStartDate, 
+		        a.application_end_date as applicationEndDate, 
+		        a.contract_start_date as contractStartDate, 
+		        a.contract_end_date as contractEndDate, 
+		        a.display_yn as displayYn,
+		        a.parcel_type as parcelType, 
+		        a.location, 
+		        a.inquiry, 
+		        a.period, 
+		        a.scale, 
+		        a.admission, 
+		        a.numbers, 
+		        a.enforcement_company as enforcementCompany, 
+		        a.constructor_company as constructorCompany,
+		        a.building_area as buildingArea, 
+		        a.building_rate as buildingRate, 
+		        a.total_area as totalArea, 
+		        a.floor_area as totalArea, 
+		        a.plottage, 
+		        a.construction_location as constructionLocation, 
+		        a.construction_inquiry as constructionInquiry, 
+		        a.construction_image_pc as constructionImagePc, 
+		        a.construction_image_mo as constructionImageMo, 
+		        a.construction_display_yn as constructionDisplayYn, 
+		        a.modelhouse_location as modelhouseLocation, 
+		        a.modelhouse_inquiry as modelhouseInquiry, 
+		        a.modelhouse_image_pc as modelhouseImagePc, 
+		        a.modelhouse_image_mo as modelhouseImageMo, 
+		        a.modelhouse_display_yn as modelhouseDisplayYn,
+         	    DATE_FORMAT(a.reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+         	    (select parcel_id from tb_parcel_interest where user_idx=#{userIdx} and parcel_id =a.parcel_id) favorite
+         FROM tb_parcel a  
+   INNER JOIN tb_parcel_interest b
+           on a.parcel_id = b.parcel_id
+         WHERE 1=1  
+           AND user_idx=#{userIdx} 
+		 ORDER BY a.parcel_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>
+</mapper>

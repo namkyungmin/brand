@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.board.mapper.FrontFaqMapper">
+    <select id="getFaqListCnt" resultType="int">
+        SELECT count(faq_id) cnt 
+         FROM tb_board_faq
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>     
+         <if test='searchCategory!=""'>
+         	AND	category =#{searchCategory}
+         </if>         
+    </select>      
+    
+    <select id="getFaqList" resultType="kr.co.honorsville.board.dto.FrontFaq">
+        SELECT  faq_id as faqId, 
+		        title, 
+		        category, 
+		        `contents`, 
+		        admin_id as adminId,
+		        display_yn as displayYn,
+         	    DATE_FORMAT(reg_time, '%Y.%m.%d %H:%i:%s') as regTime
+         FROM tb_board_faq
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>       
+         <if test='searchCategory!=""'>
+         	AND	category =#{searchCategory}
+         </if>           
+		 ORDER BY faq_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>  
+</mapper>

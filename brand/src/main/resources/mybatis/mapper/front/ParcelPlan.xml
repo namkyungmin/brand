@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.parcel.mapper.FrontParcelPlanMapper">
+    <select id="getParcelPlanIdx" resultType="kr.co.honorsville.parcel.dto.FrontParcelPlan">
+        SELECT  plan_id as planId, 
+        		parcel_name as parcelName, 
+        		parcel_plan as parcelPlan, 
+        		parcel_plan_year as parcelPlanYear, 
+        		parcel_plan_month as parcelPlanMonth, 
+        		homepage_url as homepageUrl,
+        		homepage_url_target as homepageUrlTarget,  
+        		inquiry,
+        		display_yn as displayYn,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_parcel_annual_plan where plan_id=#{planId}
+    </select>          
+    
+    <select id="getParcelPlanListCnt" resultType="int">
+        SELECT count(plan_id) cnt 
+         FROM tb_parcel_annual_plan
+         WHERE 1=1 
+         AND parcel_plan_year =  YEAR(CURDATE())
+         AND display_yn='Y' 
+    </select>      
+    
+    <select id="getParcelPlanList" resultType="kr.co.honorsville.parcel.dto.FrontParcelPlan">
+        SELECT  plan_id as planId, 
+        		parcel_name as parcelName, 
+        		parcel_plan as parcelPlan, 
+        		parcel_plan_year as parcelPlanYear, 
+        		parcel_plan_month as parcelPlanMonth,
+        						(select COUNT(a.plan_id) from tb_parcel_annual_plan a where tb_parcel_annual_plan.parcel_plan_year = a.parcel_plan_year and tb_parcel_annual_plan.parcel_plan_month = a.parcel_plan_month) parcelPlanCnt,         		
+        		homepage_url as homepageUrl,
+        		homepage_url_target as homepageUrlTarget,
+        		inquiry, 
+        		display_yn as displayYn,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_parcel_annual_plan 
+         WHERE 1=1 
+         /*AND parcel_plan_year =  YEAR(CURDATE())*/
+         AND display_yn='Y'     
+		 ORDER BY parcel_plan_year asc, parcel_plan_month asc 
+    </select>  
+         
+        
+</mapper>

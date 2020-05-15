@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.board.mapper.FrontQnaMapper">
+    <select id="getQnaIdx" resultType="kr.co.honorsville.board.dto.FrontQna">
+        SELECT  qna_id as qnaId, 
+		        title, 
+		        category, 
+		        `contents`, 
+		        `file`, 
+		        user_id as userId, 
+		        UBER_DECFN(cell_phone) as cellPhone,  
+		        UBER_DECFN(email) as email, 
+		        reply_id as replyId, 
+		        reply_time as replyTime, 
+		        reply_contents as replyContents, 
+		        `comment`, 
+		        reply_cnt as replyCnt,
+		        status,
+         	    DATE_FORMAT(reg_time, '%Y.%m.%d %H:%i:%s') as regTime
+         FROM tb_board_qna where qna_id=#{qnaId}
+    </select>          
+    
+    <select id="getQnaListCnt" resultType="int">
+        SELECT count(qna_id) cnt 
+         FROM tb_board_qna
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>   
+         <if test='searchCategory!=""'>
+         	AND	category = #{searchCategory}
+         </if>           
+         AND user_id=#{userId}
+         
+    </select>      
+    
+    <select id="getQnaList" resultType="kr.co.honorsville.board.dto.FrontQna">
+        SELECT  qna_id as qnaId, 
+		        title, 
+		        category, 
+		        `contents`, 
+		        `file`, 
+		        user_id as userId, 
+		        UBER_DECFN(cell_phone) as cellPhone,  
+		        UBER_DECFN(email) as email,
+		        reply_id as replyId, 
+		        reply_time as replyTime, 
+		        reply_contents as replyContents, 
+		        `comment`, 
+		        reply_cnt as replyCnt,
+		        status,
+         	    DATE_FORMAT(reg_time, '%Y.%m.%d %H:%i:%s') as regTime
+         FROM tb_board_qna
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if> 
+         <if test='searchCategory!=""'>
+         	AND	category = #{searchCategory}
+         </if>
+         AND user_id=#{userId}                 
+		 ORDER BY qna_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>  
+    
+     <insert id="insertQna" parameterType="kr.co.honorsville.board.dto.FrontQna">
+     	INSERT INTO tb_board_qna set     title=#{title}, 
+							        category=#{category}, 
+							        `contents`=#{contents}, 
+							        cell_phone =UBER_ENCFN(#{cellPhone}),  
+							        email=UBER_ENCFN(#{email}),
+							        user_id=#{userId},
+							        status='대기'
+		<selectKey keyProperty="qnaId" resultType="java.lang.Long" >
+        	SELECT LAST_INSERT_ID() as qnaId
+    	</selectKey>    
+     </insert>         
+    
+     <update id="updateQna" parameterType="kr.co.honorsville.board.dto.FrontQna">
+     	UPDATE tb_board_qna set     title=#{title}, 
+							        category=#{category}, 
+							        `contents`=#{contents}, 
+							        cell_phone =UBER_ENCFN(#{cellPhone}),  
+							        email=UBER_ENCFN(#{email})
+     	              where qna_id=#{qnaId}
+     </update>     
+     
+     <update id="deleteQna" parameterType="kr.co.honorsville.board.dto.FrontQna">
+     	DELETE FROM tb_board_qna
+     	              where qna_id=#{qnaId}
+     </update>      
+        
+    <select id="getFileList" resultType="kr.co.honorsville.board.dto.FrontFile">
+        SELECT  file_id as fileId,
+        		board_id as boardId,
+                board_code as boardCode,
+                file_seq as fileSeq,
+                file_name as fileName,
+                file_path as filePath,
+                file_ext as fileExt,
+                file_size as fileSize
+         FROM tb_board_file
+         WHERE 1=1 
+         AND board_code = #{boardCode}
+         AND board_id = #{boardId}
+         order by file_seq asc
+    </select>  
+    
+    <select id="getFileIdx" resultType="kr.co.honorsville.board.dto.FrontFile">
+        SELECT  file_id as fileId,
+        		board_id as boardId,
+                board_code as boardCode,
+                file_seq as fileSeq,
+                file_name as fileName,
+                file_path as filePath,
+                file_ext as fileExt,
+                file_size as fileSize
+         FROM tb_board_file
+         WHERE 1=1
+         AND file_id = #{fileId} 
+         AND board_code = #{boardCode}
+         AND board_id = #{boardId}
+         order by file_seq asc
+    </select>      
+    
+     <insert id="insertFile" parameterType="kr.co.honorsville.board.dto.FrontFile">
+     	INSERT INTO tb_board_file set board_code=#{boardCode}, 
+     	                              board_id=#{boardId},
+									  file_seq=#{fileSeq}, 
+									  file_name=#{fileName}, 
+									  file_path=#{filePath}, 
+									  file_ext=#{fileExt},
+									  file_size=#{fileSize}
+		<selectKey keyProperty="fileId" resultType="java.lang.Long" >
+        	SELECT LAST_INSERT_ID() as fileId
+    	</selectKey>									  
+     </insert>           
+</mapper>

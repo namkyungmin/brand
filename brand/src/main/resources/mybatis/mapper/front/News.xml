@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.board.mapper.FrontNewsMapper">
+    <select id="getNewsIdx" resultType="kr.co.honorsville.board.dto.FrontNews">
+        SELECT  news_id as newsId, 
+		        title, 
+		        `contents`,
+		        url,
+		        news_type as newsType, 
+		        display_date as displayDate,
+		        display_yn as displayYn,
+		        admin_Id as adminId,
+		        read_cnt as readCnt,
+         	    DATE_FORMAT(reg_time, '%Y.%m.%d %H:%i:%s') as regTime
+         FROM tb_board_news where news_id=#{newsId}
+    </select>          
+    
+    <select id="getNewsListCnt" resultType="int">
+        SELECT count(news_id) cnt 
+         FROM tb_board_news
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>
+         <![CDATA[
+         AND display_yn='Y'
+         AND display_date <= CURDATE()         
+         ]]>
+    </select>      
+    
+    <select id="getNewsList" resultType="kr.co.honorsville.board.dto.FrontNews">
+        SELECT  news_id as newsId, 
+		        title, 
+		        `contents`,
+		        url,
+		        news_type as newsType, 
+		        display_date as displayDate,
+		        display_yn as displayYn,
+		        admin_Id as adminId,
+		        read_cnt as readCnt,
+         	    DATE_FORMAT(reg_time, '%Y.%m.%d %H:%i:%s') as regTime,
+         	    DATE_FORMAT(display_date, '%b') as regTimeMonth 
+         	    
+         FROM tb_board_news
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>
+         <![CDATA[
+         AND display_yn='Y'
+         AND display_date <= CURDATE()         
+		 ORDER BY news_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+		 ]]>
+    </select>  
+     
+    <select id="getFileList" resultType="kr.co.honorsville.board.dto.FrontFile">
+        SELECT  file_id as fileId,
+        		board_id as boardId,
+                board_code as boardCode,
+                file_seq as fileSeq,
+                file_name as fileName,
+                file_path as filePath,
+                file_ext as fileExt,
+                file_size as fileSize
+         FROM tb_board_file
+         WHERE 1=1 
+         AND board_code = #{boardCode}
+         AND board_id = #{boardId}
+         order by file_seq asc
+    </select> 
+    
+        <update id="updateNewsCnt" parameterType="kr.co.honorsville.board.dto.FrontFile">
+   	UPDATE tb_board_news set read_cnt=read_cnt+1
+   	              where news_id=#{newsId}
+     </update>  
+</mapper>

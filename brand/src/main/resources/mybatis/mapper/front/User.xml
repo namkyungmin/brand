@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.user.mapper.FrontUserMapper">
+    <select id="getUserId" resultType="kr.co.honorsville.user.dto.FrontUser">
+        SELECT user_idx as userIdx, 
+               user_name as userName, 
+               user_id as userId, 
+               UBER_DECFN(cell_phone) as cellPhone,
+               UBER_DECFN(tel) as tel, 
+               password, 
+               UBER_DECFN(email) as email,
+               zipcode, 
+               address, 
+               mail_yn as mailYn, 
+               email_yn as emailYn, 
+               sms_yn as smsYn, 
+               `status`, 
+               retire_reason as retireReason,
+        	   DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+        	   DATE_FORMAT(retire_time, '%Y-%m-%d %H:%i:%s') as retireTime,
+        	   DATE_FORMAT(login_time, '%Y-%m-%d %H:%i:%s') as loginTime
+         FROM tb_user 
+         where user_id=#{userId}
+    </select>
+    
+    <select id="getUserCheck" resultType="kr.co.honorsville.user.dto.FrontUser">
+        SELECT user_idx as userIdx, 
+               user_name as userName, 
+               user_id as userId, 
+               UBER_DECFN(cell_phone) as cellPhone,
+               UBER_DECFN(tel) as tel, 
+               password, 
+               UBER_DECFN(email) as email,
+               zipcode, 
+               address, 
+               mail_yn as mailYn, 
+               email_yn as emailYn, 
+               sms_yn as smsYn, 
+               `status`, 
+               retire_reason as retireReason,
+        	   DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+        	   DATE_FORMAT(retire_time, '%Y-%m-%d %H:%i:%s') as retireTime,
+        	   DATE_FORMAT(login_time, '%Y-%m-%d %H:%i:%s') as loginTime,
+        	   IFNULL(TIMESTAMPDIFF(day, date_format(up_time, '%Y-%m-%d %H:%i'), date_format(NOW(), '%Y-%m-%d %H:%i')),0) AS timeDiff
+         FROM tb_user 
+         where 1=1
+         <if test='userId!=null'> 
+         AND user_id=#{userId}
+         </if>
+         <if test='password!=null'> 
+         AND password=UBER_HASH(#{password})
+         </if>         
+         <if test="certInfo!=null and cellPhone ==''"> 
+         AND cert_info=#{certInfo}
+         </if>         
+         <if test='cellPhone!=""'> 
+         AND cell_phone=UBER_ENCFN(#{cellPhone})
+         </if>         
+         limit 1
+    </select>    
+    
+    <select id="getUserIdx" resultType="kr.co.honorsville.user.dto.FrontUser">
+        SELECT user_idx as userIdx, 
+               user_name as userName, 
+               user_id as userId, 
+               UBER_DECFN(cell_phone) as cellPhone,
+               UBER_DECFN(tel) as tel, 
+               password, 
+               UBER_DECFN(email) as email,
+               zipcode, 
+               address, 
+               mail_yn as mailYn, 
+               email_yn as emailYn, 
+               sms_yn as smsYn, 
+               `status`, 
+               retire_reason as retireReason,
+        	   DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+        	   DATE_FORMAT(retire_time, '%Y-%m-%d %H:%i:%s') as retireTime,
+        	   DATE_FORMAT(login_time, '%Y-%m-%d %H:%i:%s') loginTime
+         FROM tb_user where user_idx=#{userIdx}
+    </select>          
+        
+    <insert id="insertUser" parameterType="kr.co.honorsville.user.dto.FrontUser" >
+		insert into tb_user ( user_name, 
+							  user_id, 
+							  cell_phone,
+							  tel, 
+							  password, 
+							  email, 
+							  zipcode, 
+							  address, 
+							  mail_yn, 
+							  email_yn, 
+							  sms_yn, 
+							  cert_type,
+							  cert_info,
+							  login_time, 
+							  `status`, 
+							  reg_time) VALUES 
+							  (#{userName},
+							   #{userId},
+							   UBER_ENCFN(#{cellPhone}),
+							   UBER_ENCFN(#{tel}),
+							   UBER_HASH(#{password}),
+							   UBER_ENCFN(#{email}),
+							   #{zipcode},
+							   #{address},
+							   #{mailYn},
+							   #{emailYn},
+							   #{smsYn},
+							   #{certType},
+							   #{certInfo},
+							   NOW(),
+							   'Active',
+							   NOW());
+		<selectKey keyProperty="userIdx" resultType="java.lang.Long" >
+        	SELECT LAST_INSERT_ID() as userIdx
+    	</selectKey>
+     </insert>
+     
+     <update id="updateUser" parameterType="kr.co.honorsville.user.dto.FrontUser">
+     	UPDATE tb_user set cell_phone=UBER_ENCFN(#{cellPhone}), 
+							email=UBER_ENCFN(#{email}), 
+							tel=UBER_ENCFN(#{tel}),
+							zipcode=#{zipcode}, 
+							address=#{address}, 
+							mail_yn=#{mailYn}, 
+							email_yn=#{emailYn}, 
+							sms_yn=#{smsYn} 
+     	              where user_id=#{userId}
+     </update>
+     
+     <update id="updateUserPassword" parameterType="kr.co.honorsville.user.dto.FrontUser">
+     	UPDATE tb_user set password=UBER_HASH(#{password}) 
+     	              where user_id=#{userId}
+     </update>  
+     
+     
+     <update id="deleteUser" parameterType="kr.co.honorsville.user.dto.FrontUser">
+     	DELETE FROM tb_user 
+     	              where user_id=#{userId}
+     </update>   
+     
+    <insert id="insertUserRetire" parameterType="kr.co.honorsville.user.dto.FrontUserRetire" >
+		insert into tb_user_retire ( user_id, 
+							  retire_reason,
+							  retire_time
+							   ) values 
+							   (#{userId},
+							   #{retireReason},
+							   NOW()
+							   );
+		<selectKey keyProperty="userIdx" resultType="java.lang.Long" >
+        	SELECT LAST_INSERT_ID() as userIdx
+    	</selectKey>
+     </insert>     
+     
+     <update id="updateUserUpTime" parameterType="kr.co.honorsville.user.dto.FrontUser">
+     	UPDATE tb_user set up_time = NOW() 
+     	              where user_id=#{userId}
+     </update>       
+        
+</mapper>

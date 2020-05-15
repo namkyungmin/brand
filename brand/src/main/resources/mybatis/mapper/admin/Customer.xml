@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.admin.mapper.CustomerMapper">
+    <select id="getCustomerIdx" resultType="kr.co.honorsville.admin.dto.Customer">
+        SELECT  customer_id as customerId, 
+        		parcel_id as parcelId, 
+        		parcel_name as parcelName, 
+        		name, 
+        		gender, 
+        		UBER_DECFN(cell_phone) as cellPhone , 
+        		UBER_DECFN(email) as email, 
+        		zipcode, 
+        		address, 
+        		private_yn as privateYn, 
+        		sms_yn as smsYn, 
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM parcel.tb_interest_customer where customer_id=#{customerId}
+    </select>          
+    
+    <select id="getCustomerListCnt" resultType="int">
+        SELECT count(customer_id) cnt 
+         FROM parcel.tb_interest_customer 
+         WHERE 1=1 
+         <if test='searchValue != ""'>
+	         AND (UBER_DECFN(email) like '%${searchValue}%' OR UBER_DECFN(cell_phone) like '%${searchValue}%' OR name like '%${searchValue}%'  OR parcel_name like '%${searchValue}%')
+         </if>
+         
+    </select>      
+    
+    <select id="getCustomerList" resultType="kr.co.honorsville.admin.dto.Customer">
+        SELECT  customer_id as customerId, 
+        		parcel_id as parcelId, 
+        		parcel_name as parcelName, 
+        		name, 
+        		gender, 
+        		UBER_DECFN(cell_phone) as cellPhone , 
+        		UBER_DECFN(email) as email, 
+        		zipcode, 
+        		address, 
+        		private_yn as privateYn, 
+        		sms_yn as smsYn, 
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM parcel.tb_interest_customer
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (UBER_DECFN(email) like '%${searchValue}%' OR UBER_DECFN(cell_phone) like '%${searchValue}%' OR name like '%${searchValue}%' OR parcel_name like '%${searchValue}%')
+         </if>
+		 ORDER BY customer_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>      
+     
+     <update id="deleteCustomer" parameterType="kr.co.honorsville.admin.dto.Customer">
+     	DELETE FROM parcel.tb_interest_customer 
+     	              where customer_id=#{customerId}
+     </update>      
+        
+</mapper>

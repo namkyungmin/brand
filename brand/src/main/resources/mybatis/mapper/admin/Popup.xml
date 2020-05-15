@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.admin.mapper.PopupMapper">
+    <select id="getPopupIdx" resultType="kr.co.honorsville.admin.dto.Popup">
+    <![CDATA[
+        SELECT  popup_id as popupId, 
+		        title, 
+		        DATE_FORMAT(start_date, '%Y-%m-%d %H:%i:%s') as startDate,  
+		        DATE_FORMAT(start_date, '%Y-%m-%d') as startDateDate,  
+		        DATE_FORMAT(start_date, '%H') as startDateHour,  
+		        DATE_FORMAT(start_date, '%i') as startDateMin,  
+		        DATE_FORMAT(end_date, '%Y-%m-%d %H:%i:%s') as endDate, 
+		        DATE_FORMAT(end_date, '%Y-%m-%d') as endDateDate,  
+		        DATE_FORMAT(end_date, '%H') as endDateHour,  
+		        DATE_FORMAT(end_date, '%i') as endDateMin,
+		        popup_type as popupType,  		        
+		        description, 
+		        image_pc as imagePc, 
+		        image_mo as imageMo, 
+		        pc_url as pcUrl, 
+		        pc_url_target as pcUrlTarget, 
+		        mo_url as moUrl, 
+		        mo_url_target as moUrlTarget, 
+		        pos_x as posX, 
+		        pos_y as posY, 
+		        admin_id as adminId,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+         	    (
+					case 
+	         	    WHEN start_date > NOW() THEN '대기'
+	         	    WHEN end_date < NOW() THEN '종료'
+    	     	    ELSE '노출'
+        	 	    END
+         	    ) AS status
+         FROM tb_popup where popup_id=#{popupId}
+         ]]>   
+    </select>          
+    
+    <select id="getPopupListCnt" resultType="int">
+        SELECT count(popup_id) cnt 
+         FROM tb_popup
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR admin_id like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>     
+         
+    </select>      
+    
+    <select id="getPopupList" resultType="kr.co.honorsville.admin.dto.Popup">
+  	<![CDATA[    
+        SELECT  popup_id as popupId, 
+		        title, 
+		        DATE_FORMAT(start_date, '%Y-%m-%d %H:%i:%s') as startDate,  
+		        DATE_FORMAT(start_date, '%Y-%m-%d') as startDateDate,  
+		        DATE_FORMAT(start_date, '%H') as startDateHour,  
+		        DATE_FORMAT(start_date, '%i') as startDateMin,  
+		        DATE_FORMAT(end_date, '%Y-%m-%d %H:%i:%s') as endDate, 
+		        DATE_FORMAT(end_date, '%Y-%m-%d') as endDateDate,  
+		        DATE_FORMAT(end_date, '%H') as endDateHour,  
+		        DATE_FORMAT(end_date, '%i') as endDateMin,
+		        popup_type as popupType,  		        
+		        description, 
+		        image_pc as imagePc, 
+		        image_mo as imageMo, 
+		        pc_url as pcUrl, 
+		        pc_url_target as pcUrlTarget, 
+		        mo_url as moUrl, 
+		        mo_url_target as moUrlTarget, 
+		        pos_x as posX, 
+		        pos_y as posY, 
+		        admin_id as adminId,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+         	    (
+					case 
+	         	    WHEN start_date > NOW() THEN '대기'
+	         	    WHEN end_date < NOW() THEN '종료'
+    	     	    ELSE '노출'
+        	 	    END
+         	    ) AS status         	    
+         FROM tb_popup
+         WHERE 1=1 
+	]]>          
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR admin_id like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>         
+		 ORDER BY popup_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>  
+    
+     <insert id="insertPopup" parameterType="kr.co.honorsville.admin.dto.Popup">
+     	INSERT INTO tb_popup set  title=#{title},
+     						 popup_type=#{popupType}, 
+							 start_date='${startDateDate} ${startDateHour}:${startDateMin}:00', 
+							 end_date='${endDateDate} ${endDateHour}:${endDateMin}:00', 
+							 description=#{description}, 
+							 image_pc=#{imagePc}, 
+							 image_mo=#{imageMo}, 
+							 pc_url=#{pcUrl}, 
+							 pc_url_target=#{pcUrlTarget}, 
+							 mo_url=#{moUrl}, 
+							 mo_url_target=#{moUrlTarget}, 
+							 admin_id=#{adminId},
+							 pos_x=#{posX}, 
+							 pos_y=#{posY}
+     </insert>       
+    
+     <update id="updatePopup" parameterType="kr.co.honorsville.admin.dto.Popup">
+     	UPDATE tb_popup set title=#{title}, 
+     	                     popup_type=#{popupType}, 
+							 start_date='${startDateDate} ${startDateHour}:${startDateMin}:00', 
+							 end_date='${endDateDate} ${endDateHour}:${endDateMin}:00', 
+							 description=#{description}, 
+							 image_pc=#{imagePc}, 
+							 image_mo=#{imageMo}, 
+							 pc_url=#{pcUrl}, 
+							 pc_url_target=#{pcUrlTarget}, 
+							 mo_url=#{moUrl}, 
+							 mo_url_target=#{moUrlTarget}, 
+							 pos_x=#{posX}, 
+							 pos_y=#{posY}
+     	              where popup_id=#{popupId}
+     </update>           
+     
+     <update id="deletePopup" parameterType="kr.co.honorsville.admin.dto.Popup">
+     	DELETE FROM tb_popup 
+     	              where popup_id=#{popupId}
+     </update>      
+        
+</mapper>

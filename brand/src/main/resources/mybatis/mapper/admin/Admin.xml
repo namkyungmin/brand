@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.admin.mapper.AdminMapper">
+    <select id="getAll" resultType="kr.co.honorsville.admin.dto.Admin">
+        SELECT * FROM tb_admin
+    </select>
+    
+    <select id="getAdmin" resultType="kr.co.honorsville.admin.dto.Admin">
+    <![CDATA[
+        SELECT admin_idx as adminIdx,
+        	   admin_id as adminId,
+        	   admin_name as adminName,
+        	   admin_type as adminType,
+        	   password,
+        	   UBER_DECFN(email) as email,
+        	   dept,
+        	   use_start_date as useStartDate,
+        	   use_end_date as useEndDate,
+        	   status,
+        	   role,
+        	   DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+        	   IFNULL(TIMESTAMPDIFF(minute, date_format(login_try_date, '%Y-%m-%d %H:%i'), date_format(NOW(), '%Y-%m-%d %H:%i')),0) AS timeDiff,
+        	   CASE WHEN use_end_date < CURDATE() THEN 'N' END endDate 
+         FROM tb_admin where admin_id=#{adminId} and password=UBER_HASH(#{password})
+    ]]>
+    </select>    
+    
+    <select id="getAdminId" resultType="kr.co.honorsville.admin.dto.Admin">
+    <![CDATA[
+        SELECT admin_idx as adminIdx,
+        	   admin_id as adminId,
+        	   admin_name as adminName,
+        	   admin_type as adminType,
+        	   password,
+        	   UBER_DECFN(email) as email,
+        	   dept,
+        	   use_start_date as useStartDate,
+        	   use_end_date as useEndDate,
+        	   status,
+        	   role,
+        	   DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+        	   login_try_cnt as loginTryCnt,
+        	   DATE_FORMAT(login_try_date, '%Y-%m-%d %H:%i:%s') loginTryDate,
+        	   IFNULL(TIMESTAMPDIFF(minute, date_format(login_try_date, '%Y-%m-%d %H:%i'), date_format(NOW(), '%Y-%m-%d %H:%i')),0) AS timeDiff,
+        	   CASE WHEN use_end_date < CURDATE() THEN 'N' END endDate
+         FROM tb_admin where admin_id=#{adminId}
+        ]]>
+    </select>
+    
+    <select id="getAdminIdx" resultType="kr.co.honorsville.admin.dto.Admin">
+    <![CDATA[
+        SELECT admin_idx as adminIdx,
+        	   admin_id as adminId,
+        	   admin_name as adminName,
+        	   admin_type as adminType,
+        	   password,
+        	   UBER_DECFN(email) as email,
+        	   dept,
+        	   use_start_date as useStartDate,
+        	   use_end_date as useEndDate,
+        	   status,
+        	   role,
+        	   DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+        	   login_try_cnt as loginTryCnt,
+        	   DATE_FORMAT(login_try_date, '%Y-%m-%d %H:%i:%s') loginTryDate,
+        	   IFNULL(TIMESTAMPDIFF(minute, date_format(login_try_date, '%Y-%m-%d %H:%i'), date_format(NOW(), '%Y-%m-%d %H:%i')),0) AS timeDiff,
+        	   CASE WHEN use_end_date < CURDATE() THEN 'N' END endDate        	   
+         FROM tb_admin where admin_idx=#{adminIdx}
+    ]]>
+    </select>          
+    
+    <select id="getAdminListCnt" resultType="int">
+        SELECT count(admin_idx) cnt 
+         FROM tb_admin 
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (admin_id like '%${searchValue}%' OR admin_name like '%${searchValue}%')
+         </if>
+         
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>         
+    </select>      
+    
+    <select id="getAdminList" resultType="kr.co.honorsville.admin.dto.Admin">
+        SELECT admin_idx as adminIdx,
+        	   admin_id as adminId,
+        	   admin_name as adminName,
+        	   admin_type as adminType,
+        	   password,
+        	   UBER_DECFN(email) as email,
+        	   dept,
+        	   use_start_date as useStartDate,
+        	   use_end_date as useEndDate,
+        	   status,
+        	   role,
+        	   DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+        	   login_try_cnt as loginTryCnt,
+        	   DATE_FORMAT(login_try_date, '%Y-%m-%d %H:%i:%s')
+         FROM tb_admin 
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (admin_id like '%${searchValue}%' OR admin_name like '%${searchValue}%')
+         </if>
+         
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>         
+		 ORDER BY admin_idx desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>      
+    
+    <insert id="insertAdmin" parameterType="kr.co.honorsville.admin.dto.Admin" >
+		insert into tb_admin (admin_id, 
+							  admin_name, 
+							  password, 
+							  email, 
+							  dept, 
+							  use_start_date, 
+							  use_end_date, 
+							  admin_type, 
+							  `status`, 
+							  role, 
+							  reg_time) VALUES 
+							  (#{adminId},
+							   #{adminName},
+							   UBER_HASH(#{password}),
+							   UBER_ENCFN(#{email}),
+							   #{dept},
+							   #{useStartDate},
+							   #{useEndDate},
+							   #{adminType},
+							   'T',
+							   #{role},
+							   NOW());
+		<selectKey keyProperty="adminIdx" resultType="java.lang.Long" >
+        	SELECT LAST_INSERT_ID() as adminIdx
+    	</selectKey>
+     </insert>
+     
+     <update id="updateAdmin" parameterType="kr.co.honorsville.admin.dto.Admin">
+     	UPDATE tb_admin set dept=#{dept},
+     	                    email=UBER_ENCFN(#{email}),
+     	                    use_start_date=#{useStartDate},
+     	                    use_end_date=#{useEndDate},
+     	                    admin_type=#{adminType},
+     	                    role=#{role}
+     	              where admin_idx=#{adminIdx}
+     </update>
+        
+     <update id="updateAdminLoginCntReset" parameterType="kr.co.honorsville.admin.dto.Admin">
+     	UPDATE tb_admin set login_try_cnt = 0, login_try_date= NOW() 
+     	              where admin_id=#{adminId}
+     </update>          
+     
+     <update id="updateAdminLoginCnt" parameterType="kr.co.honorsville.admin.dto.Admin">
+     	UPDATE tb_admin set login_try_cnt = login_try_cnt + 1, login_try_date= NOW() 
+     	              where admin_id=#{adminId}
+     </update>
+     
+     
+     <update id="updateAdminPassword" parameterType="kr.co.honorsville.admin.dto.Admin">
+     	UPDATE tb_admin set 
+     	                    password=UBER_HASH(#{password})
+     	              where admin_idx=#{adminIdx}
+     </update>   
+     
+     <update id="resetAdminPassword" parameterType="kr.co.honorsville.admin.dto.Admin">
+     	UPDATE tb_admin set 
+     	                    password=UBER_HASH(#{password}), status='Y'
+     	              where admin_idx=#{adminIdx}
+     </update>     
+     
+     <update id="deleteAdmin" parameterType="kr.co.honorsville.admin.dto.Admin">
+     	DELETE FROM tb_admin 
+     	              where admin_idx=#{adminIdx}
+     </update>      
+     
+     <update id="updateMypage" parameterType="kr.co.honorsville.admin.dto.Admin">
+     	UPDATE tb_admin set dept=#{dept},
+     	                    email=UBER_ENCFN(#{email}),
+     	                    password=UBER_HASH(#{password}),
+     	                    status='Y'
+     	              where admin_idx=#{adminIdx}
+     </update>     
+     
+    <select id="getAdminAccessIp" resultType="kr.co.honorsville.admin.dto.AdminAccessIp">
+        SELECT ip_addr as ipAddr
+         FROM tb_admin_access_ip where ip_addr=#{ipAddr}
+    </select>     
+        
+</mapper>

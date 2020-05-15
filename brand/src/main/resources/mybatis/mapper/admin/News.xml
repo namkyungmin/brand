@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.admin.mapper.NewsMapper">
+    <select id="getNewsIdx" resultType="kr.co.honorsville.admin.dto.News">
+        SELECT  news_id as newsId, 
+		        title, 
+		        `contents`,
+		        url,
+		        news_type as newsType, 
+		        display_date as displayDate,
+		        display_yn as displayYn,
+		        admin_Id as adminId,
+		        read_cnt as readCnt,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_board_news where news_id=#{newsId}
+    </select>          
+    
+    <select id="getNewsListCnt" resultType="int">
+        SELECT count(news_id) cnt 
+         FROM tb_board_news
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>     
+         
+    </select>      
+    
+    <select id="getNewsList" resultType="kr.co.honorsville.admin.dto.News">
+        SELECT  news_id as newsId, 
+		        title, 
+		        `contents`,
+		        url,
+		        news_type as newsType, 
+		        display_date as displayDate,
+		        display_yn as displayYn,
+		        admin_Id as adminId,
+		        read_cnt as readCnt,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_board_news
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>         
+
+		 ORDER BY news_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>  
+    
+     <insert id="insertNews" parameterType="kr.co.honorsville.admin.dto.News" keyProperty="newsId">
+     	INSERT INTO tb_board_news set title=#{title}, 
+									  contents=#{contents}, 
+									  url=#{url}, 
+									  news_type=#{newsType}, 
+									  display_date=#{displayDate}, 
+									  display_yn=#{displayYn},
+									  admin_id=#{adminId},
+									  reg_time = NOW()
+		<selectKey keyProperty="newsId" resultType="java.lang.Long" >
+        	SELECT LAST_INSERT_ID() as newsId
+    	</selectKey>									  
+     </insert>   	        
+    
+     <update id="updateNews" parameterType="kr.co.honorsville.admin.dto.News">
+     	UPDATE tb_board_news set title=#{title}, 
+							 contents=#{contents}, 
+							 url=#{url}, 
+							 news_type=#{newsType}, 
+							 display_date=#{displayDate}, 
+							 display_yn=#{displayYn}
+     	              where news_id=#{newsId}
+     </update>           
+     
+     <update id="deleteNews" parameterType="kr.co.honorsville.admin.dto.News">
+     	DELETE FROM tb_board_news
+     	              where news_id=#{newsId}
+     </update>      
+     
+    <select id="getFileList" resultType="kr.co.honorsville.admin.dto.File">
+        SELECT  file_id as fileId,
+        		board_id as boardId,
+                board_code as boardCode,
+                file_seq as fileSeq,
+                file_name as fileName,
+                file_path as filePath,
+                file_ext as fileExt,
+                file_size as fileSize
+         FROM tb_board_file
+         WHERE 1=1 
+         AND board_code = #{boardCode}
+         AND board_id = #{boardId}
+         order by file_seq asc
+    </select>  
+    
+     <insert id="insertFile" parameterType="kr.co.honorsville.admin.dto.File">
+     	INSERT INTO tb_board_file set board_code=#{boardCode}, 
+     	                              board_id=#{boardId},
+									  file_seq=#{fileSeq}, 
+									  file_name=#{fileName}, 
+									  file_path=#{filePath}, 
+									  file_ext=#{fileExt},
+									  file_size=#{fileSize}
+		<selectKey keyProperty="fileId" resultType="java.lang.Long" >
+        	SELECT LAST_INSERT_ID() as fileId
+    	</selectKey>									  
+     </insert>   	        
+    
+     <update id="updateFile" parameterType="kr.co.honorsville.admin.dto.File">
+     	UPDATE tb_board_file set  
+									  file_name=#{fileName}, 
+									  file_path=#{filePath}, 
+									  file_ext=#{fileExt},
+									  file_size=#{fileSize}
+     	              where board_code=#{boardCode} and board_id=#{boardId} and file_seq=#{fileSeq} 
+     </update>           
+     
+     <update id="deleteFile" parameterType="kr.co.honorsville.admin.dto.File">
+     	DELETE FROM tb_board_file
+     	              where board_code=#{boardCode} and board_id=#{boardId}
+     </update>            
+</mapper>

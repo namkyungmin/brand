@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.main.mapper.FrontBannerMapper">
+    <select id="getBannerList" resultType="kr.co.honorsville.main.dto.FrontBanner">
+    <![CDATA[
+        SELECT  banner_id as bannerId, 
+        		title,
+        		title2,  
+        		sub_title as subTitle,
+        		sub_title2 as subTitle2, 
+        		flag, 
+        		flag_info as flagInfo, 
+        		start_date as startDate, 
+        		end_date as endDate, 
+        		description as description,
+        		desc_place as descPlace,
+        		desc_size as descSize,
+        		desc_plan as descPlan, 
+        		contact_number as contactNumber, 
+        		image, 
+        		url, 
+        		url_target as urlTarget, 
+        		sort_order as sortOrder, 
+        		display_yn as displayYn,
+        		admin_id as adminId,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_banner
+         WHERE 1=1 
+         AND display_yn='Y'
+         AND CURDATE() BETWEEN start_date AND end_Date
+		 ORDER BY sort_order asc
+		 LIMIT #{startIndex}, #{cntPerPage}
+		 ]]>
+    </select>  
+</mapper>

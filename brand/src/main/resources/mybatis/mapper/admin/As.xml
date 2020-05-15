@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.admin.mapper.AsMapper">
+    <select id="getAsIdx" resultType="kr.co.honorsville.admin.dto.As">
+        SELECT  as_id as asId, 
+		        title, 
+		        category, 
+		        parcel_name as parcelName, 
+		        parcel_address as parcelAddress, 		        
+		        `contents`, 
+		        `file`, 
+		        user_id as userId, 
+		        UBER_DECFN(cell_phone) as cellPhone,  
+		        UBER_DECFN(email) as email, 
+		        reply_id as replyId, 
+		        reply_time as replyTime, 
+		        reply_contents as replyContents, 
+		        `comment`, 
+		        reply_cnt as replyCnt,
+		        status,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_board_as where as_id=#{asId}
+    </select>          
+    
+    <select id="getAsListCnt" resultType="int">
+        SELECT count(as_id) cnt 
+         FROM tb_board_as
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>     
+         
+    </select>      
+    
+    <select id="getAsList" resultType="kr.co.honorsville.admin.dto.As">
+        SELECT  as_id as asId, 
+		        title, 
+		        category, 
+		        parcel_name as parcelName, 
+		        parcel_address as parcelAddress, 		        		        
+		        `contents`, 
+		        `file`, 
+		        user_id as userId, 
+		        UBER_DECFN(cell_phone) as cellPhone,  
+		        UBER_DECFN(email) as email, 
+		        reply_id as replyId, 
+		        reply_time as replyTime, 
+		        reply_contents as replyContents, 
+		        `comment`, 
+		        reply_cnt as replyCnt,
+		        status,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_board_as
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>         
+		 ORDER BY as_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>  
+    
+     <insert id="insertAs" parameterType="kr.co.honorsville.admin.dto.As">
+     	INSERT INTO tb_board_as set     title=#{title}, 
+							        category=#{category}, 
+							        `contents`=#{contents}, 
+							        `file`=#{file}, 
+							        cell_phone =#{cellPhone},  
+							        email=#{email},
+							        parcel_name=#{parcelName}, 
+							        parcel_address=#{parcelAddress},
+     	              where as_id=#{asId}
+     </insert>     
+         
+     <update id="updateAs" parameterType="kr.co.honorsville.admin.dto.As">
+     	UPDATE tb_board_as set     title=#{title}, 
+							        category=#{category}, 
+							        `contents`=#{contents}, 
+							        `file`=#{file}, 
+							        cell_phone =#{cellPhone},  
+							        email=#{email},
+							        parcel_name=#{parcelName}, 
+							        parcel_address=#{parcelAddress},
+     	              where as_id=#{asId}
+     </update>     
+     
+     <update id="replyUpdateAs" parameterType="kr.co.honorsville.admin.dto.As">
+     	UPDATE tb_board_as set      reply_id=#{replyId}, 
+     								 reply_time=NOW(), 
+     								 reply_contents=#{replyContents}, 
+     								 `comment`=#{comment}, 
+     								 status=#{status},
+     								 reply_cnt = reply_cnt+1
+     	              where as_id=#{asId}
+     </update>           
+     
+     <update id="deleteAs" parameterType="kr.co.honorsville.admin.dto.As">
+     	DELETE FROM tb_board_as
+     	              where as_id=#{asId}
+     </update>      
+        
+</mapper>

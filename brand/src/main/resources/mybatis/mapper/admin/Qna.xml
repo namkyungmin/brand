@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.admin.mapper.QnaMapper">
+    <select id="getQnaIdx" resultType="kr.co.honorsville.admin.dto.Qna">
+        SELECT  qna_id as qnaId, 
+		        title, 
+		        category, 
+		        `contents`, 
+		        `file`, 
+		        user_id as userId, 
+		        UBER_DECFN(cell_phone) as cellPhone,  
+		        UBER_DECFN(email) as email, 
+		        reply_id as replyId, 
+		        reply_time as replyTime, 
+		        reply_contents as replyContents, 
+		        `comment`, 
+		        reply_cnt as replyCnt,
+		        status,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_board_qna where qna_id=#{qnaId}
+    </select>          
+    
+    <select id="getQnaListCnt" resultType="int">
+        SELECT count(qna_id) cnt 
+         FROM tb_board_qna
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>   
+         <if test='searchCategory!=""'>
+         	AND	category = #{searchCategory}
+         </if>           
+         
+    </select>      
+    
+    <select id="getQnaList" resultType="kr.co.honorsville.admin.dto.Qna">
+        SELECT  qna_id as qnaId, 
+		        title, 
+		        category, 
+		        `contents`, 
+		        `file`, 
+		        user_id as userId, 
+		        UBER_DECFN(cell_phone) as cellPhone,  
+		        UBER_DECFN(email) as email,
+		        reply_id as replyId, 
+		        reply_time as replyTime, 
+		        reply_contents as replyContents, 
+		        `comment`, 
+		        reply_cnt as replyCnt,
+		        status,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_board_qna
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if> 
+         <if test='searchCategory!=""'>
+         	AND	category = #{searchCategory}
+         </if>                 
+		 ORDER BY qna_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>  
+    
+     <insert id="insertQna" parameterType="kr.co.honorsville.admin.dto.Qna">
+     	INSERT INTO tb_board_qna set     title=#{title}, 
+							        category=#{category}, 
+							        `contents`=#{contents}, 
+							        `file`=#{file}, 
+							        cell_phone =#{cellPhone},  
+							        email=#{email}
+     </insert>         
+    
+     <update id="updateQna" parameterType="kr.co.honorsville.admin.dto.Qna">
+     	UPDATE tb_board_qna set     title=#{title}, 
+							        category=#{category}, 
+							        `contents`=#{contents}, 
+							        `file`=#{file}, 
+							        cell_phone =#{cellPhone},  
+							        email=#{email}
+     	              where qna_id=#{qnaId}
+     </update>     
+     
+     <update id="replyUpdateQna" parameterType="kr.co.honorsville.admin.dto.Qna">
+     	UPDATE tb_board_qna set      reply_id=#{replyId}, 
+     								 reply_time=NOW(), 
+     								 reply_contents=#{replyContents}, 
+     								 `comment`=#{comment}, 
+     								 status=#{status},
+     								 reply_cnt = reply_cnt+1
+     	              where qna_id=#{qnaId}
+     </update>           
+     
+     <update id="deleteQna" parameterType="kr.co.honorsville.admin.dto.Qna">
+     	DELETE FROM tb_board_qna
+     	              where qna_id=#{qnaId}
+     </update>      
+        
+</mapper>

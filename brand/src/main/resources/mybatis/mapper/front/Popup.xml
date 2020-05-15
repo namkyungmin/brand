@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.main.mapper.FrontPopupMapper">
+    <select id="getPopupList" resultType="kr.co.honorsville.main.dto.FrontPopup">
+  	<![CDATA[    
+        SELECT  popup_id as popupId, 
+		        title, 
+		        DATE_FORMAT(start_date, '%Y-%m-%d %H:%i:%s') as startDate,  
+		        DATE_FORMAT(start_date, '%Y-%m-%d') as startDateDate,  
+		        DATE_FORMAT(start_date, '%H') as startDateHour,  
+		        DATE_FORMAT(start_date, '%i') as startDateMin,  
+		        DATE_FORMAT(end_date, '%Y-%m-%d %H:%i:%s') as endDate, 
+		        DATE_FORMAT(end_date, '%Y-%m-%d') as endDateDate,  
+		        DATE_FORMAT(end_date, '%H') as endDateHour,  
+		        DATE_FORMAT(end_date, '%i') as endDateMin,
+		        popup_type as popupType,
+		        description, 
+		        image_pc as imagePc, 
+		        image_mo as imageMo, 
+		        pc_url as pcUrl, 
+		        pc_url_target as pcUrlTarget, 
+		        mo_url as moUrl, 
+		        mo_url_target as moUrlTarget, 
+		        pos_x as posX, 
+		        pos_y as posY, 
+		        admin_id as adminId,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime,
+         	    (
+					case 
+	         	    WHEN start_date > NOW() THEN '대기'
+	         	    WHEN end_date < NOW() THEN '종료'
+    	     	    ELSE '노출'
+        	 	    END
+         	    ) AS status         	    
+         FROM tb_popup
+         WHERE 1=1 
+         AND start_date <= NOW() and  end_date >= NOW()
+		 ORDER BY popup_id desc
+		 ]]>
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>  
+</mapper>

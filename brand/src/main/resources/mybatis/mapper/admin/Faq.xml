@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.admin.mapper.FaqMapper">
+    <select id="getFaqIdx" resultType="kr.co.honorsville.admin.dto.Faq">
+        SELECT  faq_id as faqId, 
+		        title, 
+		        category, 
+		        `contents`, 
+		        admin_id as adminId,
+		        display_yn as displayYn,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_board_faq where faq_id=#{faqId}
+    </select>          
+    
+    <select id="getFaqListCnt" resultType="int">
+        SELECT count(faq_id) cnt 
+         FROM tb_board_faq
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>     
+         <if test='searchCategory!=""'>
+         	AND	category =#{searchCategory}
+         </if>         
+    </select>      
+    
+    <select id="getFaqList" resultType="kr.co.honorsville.admin.dto.Faq">
+        SELECT  faq_id as faqId, 
+		        title, 
+		        category, 
+		        `contents`, 
+		        admin_id as adminId,
+		        display_yn as displayYn,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_board_faq
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (title like '%${searchValue}%' OR contents like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>       
+         <if test='searchCategory!=""'>
+         	AND	category =#{searchCategory}
+         </if>           
+		 ORDER BY faq_id desc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>  
+    
+     <insert id="insertFaq" parameterType="kr.co.honorsville.admin.dto.Faq">
+     	INSERT INTO tb_board_faq set title=#{title}, 
+									 category=#{category}, 
+									 contents=#{contents}, 
+									 display_yn=#{displayYn},
+									 admin_id=#{adminId}, 
+									 reg_time = NOW()
+     </insert>       
+    
+     <update id="updateFaq" parameterType="kr.co.honorsville.admin.dto.Faq">
+     	UPDATE tb_board_faq set title=#{title}, 
+							 category=#{category}, 
+							 contents=#{contents}, 
+							 display_yn=#{displayYn} 
+     	              where faq_id=#{faqId}
+     </update>           
+     
+     <update id="deleteFaq" parameterType="kr.co.honorsville.admin.dto.Faq">
+     	DELETE FROM tb_board_faq
+     	              where faq_id=#{faqId}
+     </update>      
+        
+</mapper>

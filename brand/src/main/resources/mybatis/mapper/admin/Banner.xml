@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.honorsville.admin.mapper.BannerMapper">
+    <select id="getBannerIdx" resultType="kr.co.honorsville.admin.dto.Banner">
+        SELECT  banner_id as bannerId, 
+        		title, 
+        		title2,  
+        		sub_title as subTitle,
+        		sub_title2 as subTitle2,  
+        		flag, 
+        		flag_info as flagInfo, 
+        		start_date as startDate, 
+        		end_date as endDate, 
+        		description as description,
+        		desc_place as descPlace,
+        		desc_size as descSize,
+        		desc_plan as descPlan,
+        		contact_number as contactNumber,
+        		 
+        		image, 
+        		url, 
+        		url_target as urlTarget, 
+        		sort_order as sortOrder, 
+        		display_yn as displayYn,
+        		admin_id as adminId,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_banner where banner_id=#{bannerId}
+    </select>          
+    
+    <select id="getBannerListCnt" resultType="int">
+        SELECT count(banner_id) cnt 
+         FROM tb_banner
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (email like '%${searchValue}%' OR cell_phone like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>     
+         
+    </select>      
+    
+    <select id="getBannerList" resultType="kr.co.honorsville.admin.dto.Banner">
+        SELECT  banner_id as bannerId, 
+        		title,
+        		title2,  
+        		sub_title as subTitle,
+        		sub_title2 as subTitle2, 
+        		flag, 
+        		flag_info as flagInfo, 
+        		start_date as startDate, 
+        		end_date as endDate, 
+        		description as description,
+        		desc_place as descPlace,
+        		desc_size as descSize,
+        		desc_plan as descPlan, 
+        		contact_number as contactNumber, 
+        		image, 
+        		url, 
+        		url_target as urlTarget, 
+        		sort_order as sortOrder, 
+        		display_yn as displayYn,
+        		admin_id as adminId,
+         	    DATE_FORMAT(reg_time, '%Y-%m-%d %H:%i:%s') as regTime
+         FROM tb_banner
+         WHERE 1=1 
+         <if test='searchKey=="" and searchValue != ""'>
+	         AND (email like '%${searchValue}%' OR cell_phone like '%${searchValue}%')
+         </if>
+         <if test='searchKey!="" and searchValue != ""'>
+         	AND	${searchKey} like '%${searchValue}%'
+         </if>         
+		 ORDER BY sort_order asc
+		 LIMIT #{startIndex}, #{cntPerPage}
+    </select>  
+    
+     <insert id="insertBanner" parameterType="kr.co.honorsville.admin.dto.Banner">
+     	INSERT tb_banner set title=#{title},
+     						 title2=#{title2},  
+							 sub_title=#{subTitle},
+							 sub_title2=#{subTitle2}, 
+							 flag=#{flag}, 
+							 flag_info=#{flagInfo}, 
+							 start_date=#{startDate}, 
+							 end_date=#{endDate}, 
+							 description=#{description},
+							 desc_place=#{descPlace},
+							 desc_size=#{descSize},
+							 desc_plan=#{descPlan}, 
+							 contact_number=#{contactNumber}, 
+							 image=#{image},
+							 admin_id=#{adminId},
+							 sort_order=3, 
+							 url=#{url}, 
+							 url_target=#{urlTarget}, 
+							 display_yn=#{displayYn},
+							 reg_time =NOW()
+     </insert>               
+    
+     <update id="updateBanner" parameterType="kr.co.honorsville.admin.dto.Banner">
+     	UPDATE tb_banner set title=#{title},
+							 title2=#{title2},  
+							 sub_title=#{subTitle},
+							 sub_title2=#{subTitle2}, 
+							 flag=#{flag}, 
+							 flag_info=#{flagInfo}, 
+							 start_date=#{startDate}, 
+							 end_date=#{endDate}, 
+							 description=#{description},
+							 desc_place=#{descPlace},
+							 desc_size=#{descSize},
+							 desc_plan=#{descPlan}, 
+							 contact_number=#{contactNumber}, 
+							 image=#{image}, 
+							 url=#{url}, 
+							 url_target=#{urlTarget}, 
+							 display_yn=#{displayYn} 
+     	              where banner_id=#{bannerId}
+     </update>
+     
+     <update id="updateSortBanner" parameterType="kr.co.honorsville.admin.dto.Banner">
+     	UPDATE tb_banner set sort_order=#{sortOrder} 
+     	              where banner_id=#{bannerId}
+     </update>    
+     
+     <update id="deleteBanner" parameterType="kr.co.honorsville.admin.dto.Banner">
+     	DELETE FROM tb_banner 
+     	              where banner_id=#{bannerId}
+     </update>      
+        
+</mapper>

@@ -102,7 +102,6 @@ public class EstateController {
     
     @RequestMapping("/sale/view")
     public String sale_view(Device device, HttpServletRequest request, Model model, FrontParcel parcel) throws Exception {
-    	
     	if(!CommonUtils.isEmpty(request.getParameter("parcel_id"))) {
     		parcel.setParcelId(Long.valueOf(request.getParameter("parcel_id")));
     		parcel = parcelService.getParcelIdx(parcel);    	

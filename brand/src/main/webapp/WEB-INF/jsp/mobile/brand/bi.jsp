@@ -49,7 +49,8 @@
                 <div class="section sec2">
                     <h3>심볼로고</h3>
                     <img src="/resources/mobile/images/brand/bi_sec2_img01.jpg" class="bi_logo" alt="경남 아너스빌 logo">
-                    <p>지구의 구를 형상화한 경남아너스빌의 심볼은 글로벌 건설기업으로서 경남기업의 새로운 위상을 나타내며, 타원 안의 화살표 형상은 이니셜 "K"의 변을 활용한 모티브로 더욱 새롭고 진취적인 경남기업의 미래상을 제시하고 있습니다.</p>
+                    <!-- <p>지구의 구를 형상화한 경남아너스빌의 심볼은 글로벌 건설기업으로서 경남기업의 새로운 위상을 나타내며, 타원 안의 화살표 형상은 이니셜 "K"의 변을 활용한 모티브로 더욱 새롭고 진취적인 경남기업의 미래상을 제시하고 있습니다.</p> -->
+                    <p>경남아너스빌의 새로운 로고 디자인은 명료한 워드마크 타입을 사용하여, 보다 안정적이고 견고한 신뢰감을 표현하고 있으며, 더 나은 삶의 방식을 만들어 가는 아너스빌의 핵심가치를 더욱 직관적으로 전달하고 있습니다.</p>
                     <div class="btn_wrap">
                         <a href="/download?filePath=bi&fileName=BI_jpg.jpg" class="basic_btn download" download><span>JPG 다운로드</span></a>
                         <a href="/download?filePath=bi&fileName=BI_ai.ai" class="basic_btn type02 download" download><span>AI 다운로드</span></a>

@@ -12,6 +12,7 @@
                     <div class="family_site">
                         <ul class="list_box">
                             <li><a href="http://www.kne.co.kr/" target="_blank">경남기업</a></li>
+                            <li><a href="http://www.woobang.co.kr" target="_blank">SM그룹 건설부문</a></li>
                         </ul>
                         <div class="default_box"><a href="#">패밀리 사이트</a></div>
                     </div>

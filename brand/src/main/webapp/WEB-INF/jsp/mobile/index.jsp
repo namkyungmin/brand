@@ -164,57 +164,40 @@
                 </div>
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
+                    
+                       	<c:forEach var="data" items="${parcelList}"  varStatus="status">
                         <div class="swiper-slide">
                             <div class="percel_item">
-                                <a href="" class="btn_favor" data-parcelId="27"></a>
-                                <a href="/estate/plan/view?parcel_id=27" class="item_inner">
+                                <a href="" class="btn_favor"  ${data.favorite!=null?"on":"" }" data-parcelId="${data.parcelId }"></a>
+                                	<c:if test="${data.parcelStage=='분양중' }">
+                                		<a href="/estate/sale/view?parcel_id=${data.parcelId}" class="item_inner">
+                                    </c:if>
+                                    <c:if test="${data.parcelStage=='분양예정' }">
+                                    	<a href="/estate/plan/view?parcel_id=${data.parcelId}" class="item_inner">
+                                    </c:if>
+                                    <c:if test="${data.parcelStage=='분양완료' }">
+                                    	<a href="/estate/apt/view?parcel_id=${data.parcelId}" class="item_inner">
+                                    </c:if>                                
                                     <div class="thumb">
-                                        <img src="" onError="this.src='/resources/images/main/main_parcel_basic.jpg'" alt="">
+                                        <img src="${data.parcelListImage}" alt="" class="thumb" onError="this.src='/resources/images/main/main_banner_basic.jpg'">
                                     </div>
                                     <div class="info">
-                                        <span class="flag store_on">분양예정</span>             
-                                        <!-- <span class="schedule">20년 3월 예정</span> -->
-                                        <p class="percel_name">파주금촌2동 제2지구 주택재개발정비사업</p>
-                                        <!-- <p class="address">경기도 양주시 장흥면 부곡리 524-2<br>604세대</p> -->
-                                        <p class="tel"></p>
+                                    	<c:if test="${data.parcelStage=='분양예정' }">
+                                        <span class="flag store_on">분양예정</span>
+                                        </c:if>
+                                        <c:if test="${data.parcelStage=='분양중' }">
+                                        <span class="flag on">분양중</span>
+                                        </c:if>
+                                        <c:if test="${data.parcelStage=='분양완료' }">
+                                        <span class="flag complete">분양완료</span>
+                               			</c:if>
+                                        <p class="percel_name">${data.parcelName}</p>
+                                        <p class="tel">${data.inquiry}</p>
                                     </div>
                                 </a>
                             </div>
                         </div>
-                        <div class="swiper-slide">
-                            <div class="percel_item">
-                                <a href="" class="btn_favor" data-parcelId="13"></a>
-                                <a href="/estate/plan/view?parcel_id=13" class="item_inner">
-                                    <div class="thumb">
-                                        <img src="/upload/temp/202032763513516.jpg" onError="this.src='/resources/images/main/main_parcel_basic.jpg'" alt="">
-                                    </div>
-                                    <div class="info">
-                                        <span class="flag scheduled">분양예정</span>   
-                                        <!-- <span class="schedule">20년 3월 예정</span> -->
-                                        <p class="percel_name">울산 방어동 경남아너스빌</p>
-                                        <!-- <p class="address">경기도 양주시 장흥면 부곡리 524-2<br>604세대</p> -->
-                                        <p class="tel"></p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="percel_item">
-                                <a href="" class="btn_favor" data-parcelId="12"></a>
-                                <a href="/estate/sale/view?parcel_id=12" class="item_inner">
-                                    <div class="thumb">
-                                        <img src="/upload/temp/20203951335655.jpg" onError="this.src='/resources/images/main/main_parcel_basic.jpg'" alt="">
-                                    </div>
-                                    <div class="info">
-                                        <span class="flag on">분양중</span>           
-                                        <!-- <span class="schedule">20년 3월 예정</span> -->
-                                        <p class="percel_name">송추 북한산 경남아너스빌</p>
-                                        <!-- <p class="address">경기도 양주시 장흥면 부곡리 524-2<br>604세대</p> -->
-                                        <p class="tel">031-963-1236</p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>      
+                        </c:forEach>    
                     </div>
                     <div class="swiper-pagination"></div>
 				</div>

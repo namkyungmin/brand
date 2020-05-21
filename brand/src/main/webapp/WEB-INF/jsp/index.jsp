@@ -186,7 +186,7 @@ if((window.location+"").indexOf("tb.") < 0) {
                                 </p>
                                 </c:if>
                                 <c:if test="${data.flag=='분양완료' }">
-                                <p class="flag banner closed">
+                                <p class="flag banner complete">
                                     <span>분양완료</span>
                                 </p>
                                 </c:if>                                

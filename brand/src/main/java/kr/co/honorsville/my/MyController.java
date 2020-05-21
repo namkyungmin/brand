@@ -100,6 +100,7 @@ public class MyController {
 			@RequestParam(defaultValue="") String searchKey,
 			@RequestParam(defaultValue="") String searchValue,
 			@RequestParam(defaultValue="") String category,
+			FrontFaq faq,
 			Model model) throws Exception {
 			
     	
@@ -154,6 +155,7 @@ public class MyController {
 			@RequestParam(defaultValue="") String searchKey,
 			@RequestParam(defaultValue="") String searchValue,
 			@RequestParam(defaultValue="") String searchCategory,
+			FrontQna qna,
 			Model model) throws Exception {
     		HttpSession session = request.getSession();
     		
@@ -190,7 +192,7 @@ public class MyController {
     }    
     
     @RequestMapping("/qna/view")
-    public String qna_view(Device device, HttpServletRequest request, Model model) throws Exception {
+    public String qna_view(Device device, HttpServletRequest request, Model model,FrontQna qna) throws Exception {
     	List<FrontFile> fileList = null;
     	
     	if(!CommonUtils.isEmpty(request.getParameter("qna_id"))) {
@@ -238,6 +240,7 @@ public class MyController {
 			@RequestParam(defaultValue="1") int curPage, 
 			@RequestParam(defaultValue="") String searchKey,
 			@RequestParam(defaultValue="") String searchValue,
+			FrontAs as,
 			Model model) throws Exception {
     		HttpSession session = request.getSession();
     	
@@ -275,7 +278,7 @@ public class MyController {
     }
 
     @RequestMapping("/as/view")
-    public String as_view(Device device, HttpServletRequest request, Model model) throws Exception {
+    public String as_view(Device device, HttpServletRequest request, Model model,FrontAs as) throws Exception {
     	List<FrontFile> fileList = null;
     	
     	if(!CommonUtils.isEmpty(request.getParameter("as_id"))) {
@@ -309,6 +312,7 @@ public class MyController {
 			@RequestParam(defaultValue="") String searchKey,
 			@RequestParam(defaultValue="") String searchValue,
 			@RequestParam(defaultValue="") String searchArea,
+			FrontParcel parcel,
 			Model model) throws Exception {
 			
 			HttpSession session = request.getSession();
@@ -354,7 +358,7 @@ public class MyController {
      * 비밀번호 확인
      */    
     @RequestMapping(value="/user_password_check", method=RequestMethod.POST)
-	public @ResponseBody HashMap<String, String> user_id_check(HttpServletRequest request) throws Exception {
+	public @ResponseBody HashMap<String, String> user_id_check(HttpServletRequest request, FrontUser user) throws Exception {
 	    HttpSession session = request.getSession();
 
 		user.setUserId(session.getAttribute("userId")+"");
@@ -376,7 +380,7 @@ public class MyController {
     }    
     
     @RequestMapping("/myinfo/modify")
-    public String myinfo_modify(Device device, HttpServletRequest request, Model model) throws Exception {
+    public String myinfo_modify(Device device, HttpServletRequest request, Model model, FrontUser user) throws Exception {
 	    HttpSession session = request.getSession();
 
 		user.setUserId(session.getAttribute("userId")+"");
@@ -535,6 +539,7 @@ public class MyController {
 			@RequestParam(defaultValue="") String searchValue,
 			@RequestParam(defaultValue="") String parcelStage,
 			@RequestParam(defaultValue="") String searchArea,
+			FrontParcel parcel,
 			Model model) throws Exception {
 
 			HttpSession session = request.getSession();

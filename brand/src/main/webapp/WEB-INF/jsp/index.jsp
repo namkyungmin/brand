@@ -581,8 +581,14 @@ if((window.location+"").indexOf("tb.") < 0) {
         $(document).ready(function(){
             // video rolling
             if ( videoLen > 0 ) { slideVideo(slideVideoIdx); }
-            circlePlay();
-            var slideRightIntv = setInterval("slideRight()", rightSlideSec);
+
+            if ( $rightSlide.length > 1 ) {
+                circlePlay();
+                var slideRightIntv = setInterval("slideRight()", rightSlideSec);
+            } else {
+                $circleWrap.addClass('stop');
+            }
+            
             $rightWrap.mouseenter(function(){
                 $rightWrap.addClass('active');
                 clearInterval(slideRightIntv);
@@ -590,9 +596,14 @@ if((window.location+"").indexOf("tb.") < 0) {
                 $circleWrap.addClass('stop');
             }).mouseleave(function(){
                 $rightWrap.removeClass('active');
-                slideRightIntv = setInterval("slideRight()", rightSlideSec);
-                circlePlay();
-                $circleWrap.removeClass('stop');
+                if ( $rightSlide.length > 1 ) {
+                    slideRightIntv = setInterval("slideRight()", rightSlideSec);
+                    circlePlay();
+                    $circleWrap.removeClass('stop');
+                } else {
+                    $circleWrap.addClass('stop');
+                }
+                
             });
 
             $prgIdxEl.click(function(e){
@@ -602,10 +613,6 @@ if((window.location+"").indexOf("tb.") < 0) {
                 var rightTxtClass = $rightSlide.eq($thisIdx).attr('class');
                 slideRightIdx = $thisIdx;
 
-                // $rightTxt.find('span').removeClass('on');
-                // $this.addClass('on').siblings().removeClass('on');
-                // $rightSlide.eq($thisIdx).addClass('active').siblings().removeClass('active');
-                // drawTitle(rightTxtClass);
                 
                 if ( !$this.hasClass('on') ) {
                     $rightTxt.find('span').removeClass('on');

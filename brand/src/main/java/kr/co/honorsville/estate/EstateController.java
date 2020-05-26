@@ -102,6 +102,7 @@ public class EstateController {
     
     @RequestMapping("/sale/view")
     public String sale_view(Device device, HttpServletRequest request, Model model, FrontParcel parcel) throws Exception {
+    	
     	if(!CommonUtils.isEmpty(request.getParameter("parcel_id"))) {
     		parcel.setParcelId(Long.valueOf(request.getParameter("parcel_id")));
     		parcel = parcelService.getParcelIdx(parcel);    	
@@ -175,7 +176,7 @@ public class EstateController {
     }
     
     @RequestMapping("/plan/view")
-    public String plan_view(Device device, HttpServletRequest request, Model model) throws Exception {
+    public String plan_view(Device device, HttpServletRequest request, Model model,FrontParcel parcel) throws Exception {
     	if(!CommonUtils.isEmpty(request.getParameter("parcel_id"))) {
     		parcel.setParcelId(Long.valueOf(request.getParameter("parcel_id")));
     		parcel = parcelService.getParcelIdx(parcel);    	
@@ -251,7 +252,7 @@ public class EstateController {
     }
     
     @RequestMapping("/apt/view")
-    public String apt_view(Device device, HttpServletRequest request, Model model) throws Exception {
+    public String apt_view(Device device, HttpServletRequest request, Model model, FrontParcel parcel) throws Exception {
     	if(!CommonUtils.isEmpty(request.getParameter("parcel_id"))) {
     		parcel.setParcelId(Long.valueOf(request.getParameter("parcel_id")));
     		parcel = parcelService.getParcelIdx(parcel);    	
@@ -274,6 +275,7 @@ public class EstateController {
 			@RequestParam(value="curPage", defaultValue="1") int curPage, 
 			@RequestParam(value="searchKey", defaultValue="") String searchKey,
 			@RequestParam(value="searchValue", defaultValue="") String searchValue,
+			FrontParcelPlan parcelPlan,
 			Model model) throws Exception {
 			
 			// 검색 조건 셋팅
@@ -397,7 +399,7 @@ public class EstateController {
     }    
     
     @RequestMapping("/add_favorite")
-    public  @ResponseBody HashMap<String, String> add_favorite(Device device, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+    public  @ResponseBody HashMap<String, String> add_favorite(Device device, HttpServletRequest request, HttpServletResponse response, Model model, FrontParcel parcel) throws Exception {
         	response.setContentType("text/html;charset=UTF-8");
         	
     	    HttpSession session = request.getSession();

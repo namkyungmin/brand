@@ -168,7 +168,7 @@
                        	<c:forEach var="data" items="${parcelList}"  varStatus="status">
                         <div class="swiper-slide">
                             <div class="percel_item">
-                                <a href="" class="btn_favor"  ${data.favorite!=null?"on":"" }" data-parcelId="${data.parcelId }"></a>
+                                <a href="" class="btn_favor ${data.favorite!=null?"on":"" }" data-parcelId="${data.parcelId }"></a>
                                 	<c:if test="${data.parcelStage=='분양중' }">
                                 		<a href="/estate/sale/view?parcel_id=${data.parcelId}" class="item_inner">
                                     </c:if>

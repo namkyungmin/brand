@@ -35,7 +35,7 @@
                         <c:if test="${data.parcelStage=='분양완료'  && data.parcelType != '상가분양' }">
                         <span class="flag complete">${data.parcelStage }</span>
                         </c:if>		                                  
-                        <div class="tit_inner">
+                        <div class="tit_inner" style="align:center;">
                             <h3>
                                 ${data.parcelName}
                             </h3>
@@ -48,7 +48,7 @@
                         </c:if>
                     </div>
                     <c:if test="${data.parcelDetailImage != ''}">
-                    <img src="${data.parcelDetailImage}" alt="">
+                    <p style="text-align:center;"><img src="${data.parcelDetailImage}" alt=""></p>
                     </c:if>
                 </div>
                 <c:if test="${data.displayYn == 'Y'}">

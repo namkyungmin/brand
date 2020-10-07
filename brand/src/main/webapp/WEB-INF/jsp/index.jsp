@@ -199,7 +199,14 @@ if((window.location+"").indexOf("tb.") < 0) {
                                     <div class="small_txt">
                                         <span>${data.subTitle}<br>${data.subTitle2}</span>
                                     </div>
-                                    <div class="big_txt later">
+                                    <c:choose>
+                                    	<c:when test="${data.title2=='시그니처' }">
+                                    		<div class="big_txt_km later">
+                                    	</c:when>
+                                    	<c:otherwise>
+                                    	<div class="big_txt later">
+                                    	</c:otherwise>
+                                    </c:choose>  
                                         <div>
                                             <span>${data.title }</span>
                                         </div>

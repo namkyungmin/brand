@@ -31,6 +31,7 @@
 .right_wrap .inner .title_wrap .small_txt span { position:absolute; bottom:0; left:20px; opacity:0; -webkit-transition: .3s ease-in-out; transition: .3s ease-in-out; -moz-transition: .3s ease-in-out; }
 .right_wrap .inner .title_wrap .small_txt span.on { left:0; opacity:1;}
 .right_wrap .inner .title_wrap .big_txt { font-size:40px; color:#000000; letter-spacing:-2.4px; font-weight:700; margin-top:10px; }
+.right_wrap .inner .title_wrap .big_txt_km { font-size:31px; color:#000000; letter-spacing:-2.4px; font-weight:700; margin-top:10px; }
 .right_wrap .inner .title_wrap .big_txt > div { height:46px; line-height:1.2; position:relative; overflow:hidden; }
 .right_wrap .inner .title_wrap .big_txt > div span { position:absolute; bottom:-46px; left:0; -webkit-transition: .3s ease-in-out; transition: .3s ease-in-out; -moz-transition: .3s ease-in-out; }
 .right_wrap .inner .title_wrap .big_txt > div span.on { bottom:0; }

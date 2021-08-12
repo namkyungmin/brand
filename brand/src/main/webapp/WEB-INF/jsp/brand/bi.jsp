@@ -73,9 +73,7 @@
                             <div class="right">
                                 <ul>
                                     <li>PANTONE Warm Gray 3 C <br>#bab3ac</li>
-                                    <li>PANTONE 2328 C <br>#706142</li>
                                     <li>PANTONE Cool Gray 10 C <br>#626469</li>
-                                    <li>PANTONE 4062 C <br>#9d3d3e</li>
                                 </ul>
                             </div>
                         </div>

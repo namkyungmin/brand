@@ -64,9 +64,7 @@
                         </ul>
                         <ul class="bottom">
                             <li>PANTONE<br> Warm Gray 3 C <br>#bab3ac</li>
-                            <li>PANTONE 2328 C <br>#706142</li>
                             <li>PANTONE<br> Cool Gray 10 C <br>#626469</li>
-                            <li>PANTONE 4062 C <br>#9d3d3e</li>
                         </ul>
                     </div>
                     <p class="txt">아너스빌의 새로운 메인컬러는 깊이 있는 무게감과 세련된 감각으로 프리미엄 라이프 스타일의 브랜드 이미지를 표현합니다. 또한 그레이와 골드를 조화롭게 사용해 아너스빌만의 정제된 고품격 이미지를 완성합니다.</p>

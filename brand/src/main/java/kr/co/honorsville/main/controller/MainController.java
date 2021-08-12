@@ -72,7 +72,6 @@ public class MainController {
         /* 팝업 정보 */
         popup.setStartIndex(0);
         popup.setCntPerPage(10);
-		
 		// 전체리스트 출력
 		List<FrontPopup> popupList = popupService.getPopupList(popup);        
         

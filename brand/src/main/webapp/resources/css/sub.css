@@ -150,13 +150,13 @@
 .bi .sec3 .color_wrap h4{margin-bottom:20px;}
 .bi .sec3 .color_box li{padding:20px 0 0 15px; color:#fff; line-height:20px; box-sizing:border-box;}
 .bi .sec3 .color_box{overflow:hidden;}
-.bi .sec3 .color_box .left{float:left; width:550px;}
+.bi .sec3 .color_box .left{float:left; width:825px;}
 .bi .sec3 .color_box .left li{height:268px; background-color:#004b6b;}
-.bi .sec3 .color_box .right{overflow:hidden; float:left; width:550px; height:268px;}
-.bi .sec3 .color_box .right li{float:left; width:275px; height:134px;}
+.bi .sec3 .color_box .right{overflow:hidden; float:left; width:275px; height:268px;}
+.bi .sec3 .color_box .right li{ width:275px; height:134px;}
 .bi .sec3 .color_box .right li:nth-child(1){background-color:#bab3ac;}
-.bi .sec3 .color_box .right li:nth-child(2){background-color:#706142;}
-.bi .sec3 .color_box .right li:nth-child(3){background-color:#626469;}
+.bi .sec3 .color_box .right li:nth-child(2){background-color:#626469;}
+.bi .sec3 .color_box .right li:nth-child(3){background-color:#706142;}
 .bi .sec3 .color_box .right li:nth-child(4){background-color:#9d3d3e;}
 .bi .sec3 p.txt{line-height:26px; letter-spacing:-.6px;}
 
